@@ -16,22 +16,23 @@ function submit(e) {
     // if (userText.Text !== '') {
     //make http call
     xhr.open('GET',
-        `https://api.giphy.com/v1/gifs/search?api_key=5zVtjNIcGO5vztzNFP0K7FKMiHwQnIcY&q=
-        ${userText}&limit=5&offset=0
-        &rating=G&lang=en`, true);
+        // `http://openlibrary.org/search.json?title&q=${userText}?limit&q=10?language=eng`, true);
+        `https://www.googleapis.com/books/v1/volumes?q=${userText}&maxresults=10`, true);
 
 
     xhr.onload = function() {
         if (this.status === 200) {
             const response = JSON.parse(this.responseText);
-            //console.log(response)
+            console.log(response)
 
             var output = '';
 
-            if (response.meta.msg === 'OK') {
-                response.data.forEach(function(gif) {
-                    output += `<img src = '${gif.embed_url}'>`
-                        //console.log(output)
+            if (response.kind === "books#volumes") {
+                response.items.forEach(function(form) {
+                    output += `<li style=>Book Title:${form.volumeInfo.title} Book author:${form.volumeInfo.authors}</li>
+                    <img src = "${form.volumeInfo.imageLinks.thumbnail}">`
+
+                    //console.log(output)
                 });
             } else {
                 output += `<li>something went wrong</li>`
